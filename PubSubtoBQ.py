@@ -22,8 +22,6 @@ from apache_beam.options.pipeline_options import GoogleCloudOptions
 
 import google.auth
 
-from IPython.core.display import display, HTML
-
 class CustomPipelineOptions(PipelineOptions):
     """
     Runtime Parameters given during template execution
@@ -58,13 +56,17 @@ def streaming_pipeline(project, region="us-east1"):
         project=project,
         region=region,
         staging_location="%s/staging" % bucket,
-        temp_location="%s/temp" % bucket
+        temp_location="%s/temp" % bucket,
+        template_location = 'gs://lunar-airport-298818-sample-pipeline',
+        autoscaling_algorithm = 'THROUGHPUT_BASED',
+        max_num_workers = 3 
     )
 
     p = beam.Pipeline(DataflowRunner(), options=options)
 
     fam = (p | "Read Topic" >> ReadFromPubSub(topic = topic)
              | 'Parse JSON to Dict' >> beam.Map(json.loads) # Example message: {"name": "carlos", 'score': 10, 'timestamp': "2020-03-14 17:29:00.00000"}
+             | "window" >> beam.WindowInto(beam.window.FixedWindows(10))
              | "Write to BQ" >> WriteToBigQuery(table=table, 
                                   schema = schema,
                                   create_disposition=BigQueryDisposition.CREATE_IF_NEEDED,
