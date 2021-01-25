@@ -42,6 +42,7 @@ class CustomPipelineOptions(PipelineOptions):
             type=str,
             help='Output file if needed')
 
+project = 'lunar-airport-298818'
 
 #Pipeline Logic
 def streaming_pipeline(project, region="us-east1"):
