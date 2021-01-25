@@ -22,7 +22,6 @@ from apache_beam.options.pipeline_options import GoogleCloudOptions
 
 import google.auth
 
-from utils.utils import publish_to_topic
 from IPython.core.display import display, HTML
 
 class CustomPipelineOptions(PipelineOptions):
