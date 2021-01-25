@@ -37,7 +37,7 @@ class CustomPipelineOptions(PipelineOptions):
             '--path',
             type=str,
             help='Path of the file to read from'),
-            default = 'gs://lunar-airport-298818-sample-pipeline/Family/family.json'
+            #default = 'gs://lunar-airport-298818-sample-pipeline/Family/family.json'
         parser.add_value_provider_argument(
             '--output',
             type=str,
