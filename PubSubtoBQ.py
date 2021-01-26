@@ -66,7 +66,7 @@ def streaming_pipeline(project, region="us-east1"):
 
     fam = (p | "Read Topic" >> ReadFromPubSub(topic = topic)
              | 'Parse JSON to Dict' >> beam.Map(json.loads) # Example message: {"name": "carlos", 'score': 10, 'timestamp': "2020-03-14 17:29:00.00000"}
-             | "window" >> beam.WindowInto(beam.window.FixedWindows(10))
+             | "window" >> beam.WindowInto(beam.window.FixedWindows(5))
              | "Write to BQ" >> WriteToBigQuery(table=table, 
                                   schema = schema,
                                   create_disposition=BigQueryDisposition.CREATE_IF_NEEDED,
