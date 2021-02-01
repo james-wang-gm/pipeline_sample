@@ -15,8 +15,6 @@ from apache_beam.io.gcp.bigquery import BigQueryDisposition, WriteToBigQuery
 from apache_beam.io import WriteToText
 from apache_beam.io.gcp.bigquery import parse_table_schema_from_json
 
-from apache_beam.runners.interactive.interactive_runner import InteractiveRunner
-import apache_beam.runners.interactive.interactive_beam as ib
 from apache_beam.runners import DataflowRunner
 from apache_beam.options.pipeline_options import GoogleCloudOptions
 
@@ -55,6 +53,7 @@ def streaming_pipeline(project, region="us-east1"):
         streaming=True,
         project=project,
         region=region,
+        # Make sure staging and temp folder are created using cloud commands
         staging_location="%s/staging" % bucket,
         temp_location="%s/temp" % bucket,
         template_location = 'gs://lunar-airport-298818-sample-pipeline',
@@ -64,10 +63,12 @@ def streaming_pipeline(project, region="us-east1"):
 
     p = beam.Pipeline(DataflowRunner(), options=options)
 
+    # Can either use subscription or topic (preferably subscription)
     fam = (p | "Read Topic" >> ReadFromPubSub(topic = topic)
              | 'Parse JSON to Dict' >> beam.Map(json.loads) # Example message: {"name": "carlos", 'score': 10, 'timestamp': "2020-03-14 17:29:00.00000"}
              | "window" >> beam.WindowInto(beam.window.FixedWindows(5))
              | "Write to BQ" >> WriteToBigQuery(table=table, 
+                                  # Could potentially use Schema detector 
                                   schema = schema,
                                   create_disposition=BigQueryDisposition.CREATE_IF_NEEDED,
                                   write_disposition=BigQueryDisposition.WRITE_APPEND))
