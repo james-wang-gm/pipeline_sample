@@ -54,7 +54,7 @@ def streaming_pipeline(project, region="us-east1"):
         project=project,
         region=region,
         # Make sure staging and temp folder are created using cloud commands
-        staging_location="%s/staging" % bucket,
+        staging_location="gs://dev-analytics-temp-files/staging",
         temp_location="%s/temp" % bucket,
         template_location = 'gs://dev-analytics-temp-files',
         autoscaling_algorithm = 'THROUGHPUT_BASED',
