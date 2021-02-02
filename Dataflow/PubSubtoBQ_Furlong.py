@@ -41,7 +41,7 @@ class CustomPipelineOptions(PipelineOptions):
 project = 'furlong-platform-sbx-8d14f3'
 
 #Pipeline Logic
-def streaming_pipeline(project, region="us-east1"):
+def streaming_pipeline(project, region="us-central1"):
     
     topic = "projects/furlong-platform-sbx-8d14f3/topics/Analytics-Dummy"
     schema = 'id:int, father:string, mother:string, children:string'
@@ -54,9 +54,9 @@ def streaming_pipeline(project, region="us-east1"):
         project=project,
         region=region,
         # Make sure staging and temp folder are created using cloud commands
-        staging_location="gs://dev-analytics-temp-files/staging",
-        temp_location="%s/temp" % bucket,
-        template_location = 'gs://dev-analytics-temp-files',
+        #staging_location="gs://dev-analytics-temp-files/staging",
+        #temp_location="%s/temp" % bucket,
+        #template_location = 'gs://dev-analytics-temp-files',
         autoscaling_algorithm = 'THROUGHPUT_BASED',
         max_num_workers = 3 
     )
